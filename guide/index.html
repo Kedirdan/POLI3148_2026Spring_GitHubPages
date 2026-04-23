@@ -773,20 +773,86 @@ then commit and push.</code></pre>
 
   <p>After cloning, open the new folder in VS Code and run Prompt 2 as usual. About a minute later, you'll have a live page mirroring my demo but hosted on your own account.</p>
 
-  <h4 id="deploy-own">If my demo works but your own project doesn't</h4>
-  <p>This is a common situation. Your setup is fine (the demo deployed), but your own project structure is not quite what Prompt 2 expects. The fix is to clean up your project first.</p>
+  <h4 id="deploy-own">If my demo deploys but your own project doesn't</h4>
+  <p>This is the most common situation in the second half of the lab. Your setup is fine (the demo worked), but your project's folder structure is not quite what GitHub Pages or Prompt 2 expects. The fix is almost always to tidy up a few things before deploying.</p>
 
-  <p>Ask Copilot something like:</p>
+  <h5>What a well-structured project looks like</h5>
 
-  <pre><code>My project doesn't deploy cleanly with Prompt 2. Please clean up the
-folder structure so it works with GitHub Pages. Look at where my HTML,
-CSS, and assets live, and reorganize them sensibly.</code></pre>
+  <p>GitHub Pages serves static files. At minimum, there must be an <code>index.html</code> that the server can return when someone visits your URL. Here are three shapes that work cleanly:</p>
 
-  <p>Copilot will look at your files and propose moves. Let it tidy things up, then run Prompt 2 again.</p>
+  <p><strong>Example 1. Minimal single page.</strong></p>
+  <pre><code>my-project/
+└── index.html</code></pre>
+
+  <p><strong>Example 2. A full static site with assets.</strong></p>
+  <pre><code>my-project/
+├── index.html
+├── style.css
+├── script.js
+└── assets/
+    ├── logo.png
+    └── data.json</code></pre>
+
+  <p><strong>Example 3. A mixed project (data pipeline plus web output).</strong></p>
+  <pre><code>my-project/
+├── dashboard.py            # generates the HTML
+├── data/
+│   └── raw.csv
+├── docs/                   # the webpage Prompt 2 publishes
+│   ├── index.html
+│   ├── style.css
+│   └── assets/
+├── requirements.txt
+└── README.md</code></pre>
+
+  <p>In Example 3, your Python script stays at the root, your data stays in <code>data/</code>, and only the generated website lives under <code>docs/</code>. This is the pattern my demo uses, and it is the cleanest option when your project mixes code and web output.</p>
+
+  <h5>A quick self-check before you run Prompt 2</h5>
+
+  <p>Open your project folder in VS Code, look at the file tree on the left, and answer three questions:</p>
+  <ol>
+    <li>Is there a file named exactly <code>index.html</code>, either at the project root or inside a <code>docs/</code> folder? The name must be lowercase and exact.</li>
+    <li>Does that <code>index.html</code> reference other files (CSS, JS, images) that are actually in the project, at the paths it expects? Open <code>index.html</code> locally (double-click it in Finder or Explorer) and confirm the page renders correctly with images and styles. If it looks broken locally, it will look broken online.</li>
+    <li>Do all your folder and file names use only letters, digits, hyphens, and underscores? No spaces, no Chinese characters, no special symbols. GitHub Pages URLs break on those.</li>
+  </ol>
+
+  <p>If the answer to any of these is no, fix that first. Prompt 2 cannot publish what is not there.</p>
+
+  <h5>The four most common structure problems</h5>
+
+  <p><strong>1. The main page is not called <code>index.html</code>.</strong> Rename <code>home.html</code>, <code>main.html</code>, or <code>my-page.html</code> to <code>index.html</code>. Without an exact match, GitHub Pages shows a 404 at your site root.</p>
+
+  <p><strong>2. Links and image paths are broken.</strong> If <code>index.html</code> says <code>&lt;img src="/pictures/logo.png"&gt;</code> but your images actually live in <code>assets/images/</code>, nothing shows up. After deploying, open the live page, right-click, pick <strong>Inspect</strong>, and look at the <strong>Console</strong> tab for 404 errors. Each 404 tells you which path is wrong.</p>
+
+  <p><strong>3. Your web files are in a folder Prompt 2 does not recognise.</strong> Prompt 2's whitelist is: <code>assets/</code>, <code>images/</code>, <code>img/</code>, <code>css/</code>, <code>js/</code>, <code>fonts/</code>, <code>media/</code>. If your project uses <code>public/</code>, <code>web/</code>, <code>dist/</code>, or something custom, either rename it to <code>docs</code>, or tell Copilot explicitly: <em>"also copy the public folder into docs."</em></p>
+
+  <p><strong>4. The folder is already a git repository pointing somewhere else.</strong> If your folder was cloned from a classmate or downloaded from a template, it may already have a <code>.git</code> directory connected to another remote. Prompt 2 refuses to overwrite it. Ask Copilot: <em>"Detach the existing remote and start a fresh repository for me."</em></p>
+
+  <h5>Asking Copilot to tidy up, step by step</h5>
+
+  <p>A specific prompt works better than a vague one. Instead of "fix my project", paste this:</p>
+
+  <pre><code>My project does not deploy cleanly with Prompt 2. Please do the following:
+
+1. List every file and folder at my project root.
+2. Identify which files belong in the published webpage (HTML, CSS, JS,
+   images, fonts) and which do not (Python, data, notebooks, READMEs).
+3. Propose a clean structure where the webpage files live inside docs/,
+   and everything else stays where it is.
+4. Show me the proposed moves in a list before changing anything.
+
+Wait for my confirmation before doing any moves.</code></pre>
+
+  <p>Review Copilot's proposal. If it looks right, say "yes, go ahead." If a specific move is wrong, point it out and ask for a revision. Then run Prompt 2 again.</p>
+
+  <div class="callout warn">
+    <span class="label">Back up before any restructure</span>
+    <p>Before you let Copilot reorganise files, commit whatever you have (in the terminal: <code>git add . &amp;&amp; git commit -m "before restructure"</code>) or copy the whole folder to your Desktop as a safety net. If something goes wrong, you want a known-good state to return to.</p>
+  </div>
 
   <div class="callout tip">
-    <span class="label">Why this happens</span>
-    <p>Prompt 2 looks for <code>index.html</code> at the root or in <code>/docs/</code>, and copies standard web folders (<code>assets/</code>, <code>css/</code>, <code>js/</code>, <code>images/</code>, etc.) into <code>/docs/</code>. If your project uses unusual folder names, the automatic copy misses files.</p>
+    <span class="label">Why this is fiddly the first time</span>
+    <p>Prompt 2 assumes a few conventions (an <code>index.html</code> at root or in <code>docs/</code>, standard web folder names, no colliding git history). Real student projects rarely match every assumption on the first try. Once you know the four problems above, fixing them takes a minute — the hard part is knowing what to look for.</p>
   </div>
 
   <div class="callout note">
@@ -859,18 +925,18 @@ git push</code></pre>
   <h2>Part 6</h2>
   <h3>If something goes wrong</h3>
 
-  <p>There is one universal answer that solves almost everything.</p>
+  <p>Running into errors the first few times is normal. The combination of Copilot, GitHub, and whatever operating system you happen to be on is genuinely fiddly, and small differences in your environment (Windows vs. macOS, VS Code version, Copilot version, existing terminal state) surface in ways no tutorial can fully predict. Work through errors one at a time — each one gets you closer to a working deployment.</p>
 
   <div class="callout tip">
     <span class="label">Universal fix</span>
     <p>Whatever you see on screen — an error, something stuck, a command that didn't work — <strong>copy it, paste it into Copilot, ask it to fix it</strong>. Copilot knows what it just did, so it knows what went wrong. This handles almost every case.</p>
   </div>
 
-  <p>The exceptions, where you should raise your hand for the TA or reply to the follow-up email:</p>
+  <p>The exceptions, where pasting the error to Copilot will not help:</p>
   <ul>
-    <li>A setting you cannot find in Copilot's own menu (for example, the <code>Default Approvals</code> dropdown does not appear).</li>
-    <li>You are not sure you opened the right folder in VS Code, and Copilot keeps failing to find your files.</li>
-    <li>Anything that blocks you for more than a few minutes even after pasting the error to Copilot.</li>
+    <li>A setting you cannot find in Copilot's own menu (for example, the <code>Default Approvals</code> dropdown does not appear). Copilot cannot see its own UI.</li>
+    <li>You are not sure you opened the right folder in VS Code, and Copilot keeps failing to find your files. Copilot cannot open folders for you.</li>
+    <li>Anything that blocks you for more than a few minutes even after pasting the error to Copilot. At that point, either switch to the <a href="#manual-path">manual path</a> or email me.</li>
   </ul>
 
   <h4>Common issues at a glance</h4>
@@ -878,20 +944,41 @@ git push</code></pre>
   <div class="card-row">
     <div class="card">
       <h6>404 at your new URL</h6>
-      <p>The build takes a short while. Wait a minute, refresh the page. If still 404 after five minutes, check the repo's <strong>Settings → Pages</strong>: source should be <code>main</code> and <code>/docs</code>.</p>
+      <p>The build takes up to 3 minutes. Wait, refresh. If still 404 after 5 minutes, open the repo's <strong>Settings → Pages</strong> on github.com and confirm Source is <strong>main</strong> and <strong>/docs</strong>. Save again if needed.</p>
+    </div>
+    <div class="card">
+      <h6>Page loads but looks broken</h6>
+      <p>Usually a path issue. Right-click the page, pick <strong>Inspect</strong>, open the <strong>Console</strong> tab, and look for red 404 errors. Each one points to a file the page tried to load but couldn't find.</p>
     </div>
     <div class="card">
       <h6>"Repository name already exists"</h6>
-      <p>Prompt 2 retries automatically with a date suffix like <code>-0423</code>. Nothing for you to do.</p>
+      <p>Prompt 2 retries automatically with a date suffix (like <code>-0423</code>). If it doesn't, tell Copilot: <em>"use a different repo name, add a date suffix."</em></p>
     </div>
     <div class="card">
       <h6>Files you didn't expect in /docs</h6>
-      <p>Your root has HTML files with non-standard names. Ask Copilot: <em>"Move X out of docs."</em></p>
+      <p>Your root has HTML files with non-standard names. Ask Copilot: <em>"move the unnecessary files out of docs, keep only the webpage."</em></p>
     </div>
     <div class="card">
       <h6>Expected files missing from /docs</h6>
-      <p>Your project uses a subfolder Prompt 2's whitelist doesn't know. Ask: <em>"Also copy the &lt;folder&gt; folder into docs."</em></p>
+      <p>Your project uses a subfolder Prompt 2's whitelist doesn't know. Ask: <em>"also copy the <code>&lt;folder&gt;</code> folder into docs."</em></p>
     </div>
+    <div class="card">
+      <h6>"Permission denied" when pushing</h6>
+      <p>Your authorization is partial or expired. Re-run <code>gh auth login --web</code> in the terminal and allow <strong>all</strong> permissions this time.</p>
+    </div>
+    <div class="card">
+      <h6>"Not a git repository" error</h6>
+      <p>Prompt 2 assumes your folder is ready to initialize. Ask Copilot: <em>"initialise git in this folder and retry Prompt 2."</em></p>
+    </div>
+    <div class="card">
+      <h6>Changes don't appear after pushing</h6>
+      <p>GitHub Pages caches aggressively. Wait 60 seconds, then do a hard refresh (<kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>R</kbd> on macOS, <kbd>Ctrl</kbd>+<kbd>F5</kbd> on Windows). Also confirm the commit actually reached GitHub by opening your repo page.</p>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <span class="label">Before emailing me</span>
+    <p>If an error is blocking you, try these in order: (1) paste the error to Copilot and ask it to fix it, (2) check the card above that matches your symptom, (3) look at Part 7 for the manual equivalent. If none of those solve it, email me a screenshot of the error and a brief description of what you were doing. Do not rerun Prompt 2 repeatedly — that can create duplicate broken repos.</p>
   </div>
 </section>
 
