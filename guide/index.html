@@ -507,6 +507,7 @@ kbd {
         <li><a href="#after-private">Make it private</a></li>
         <li><a href="#after-delete">Delete safely</a></li>
         <li><a href="#after-log">GITHUB_PAGES.md</a></li>
+        <li><a href="#after-undo">Undo a deployment</a></li>
       </ol>
     </li>
     <li><a href="#stuck">6 · When stuck</a></li>
@@ -659,7 +660,7 @@ then commit and push.</code></pre>
   </div>
 
   <h4 id="setup-install">Step 2. Run Prompt 1</h4>
-  <p>Copy the whole text of Prompt 1, paste it into Copilot Chat, and send it. Copilot installs everything for you automatically.</p>
+  <p>Copy the whole text of Prompt 1, paste it into Copilot Chat, and send it. Prompt 1 installs a tool called <code>gh</code> (GitHub's command-line client) and logs you into GitHub, so Copilot can push code to your account later.</p>
 
   <div class="link-grid">
     <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/prompts/prompt-1-setup.txt" class="link-card" target="_blank">
@@ -674,14 +675,20 @@ then commit and push.</code></pre>
     </a>
   </div>
 
+  <div class="callout warn">
+    <span class="label">macOS password prompt (don't panic)</span>
+    <p>On macOS, installing <code>gh</code> may ask for your <strong>login password</strong> in the terminal. The password field <em>will not show any characters</em> as you type (not even dots or asterisks). This is a security feature, not a bug. Type your password carefully and press Enter.</p>
+  </div>
+
   <h4 id="setup-authorize">Step 3. Authorize GitHub</h4>
-  <p>During the process, Copilot will give you an <strong>8-character code</strong> and open a browser tab. In that browser tab:</p>
+  <p>During the process, Copilot will give you an <strong>8-character device code</strong> and open a browser tab. The code is valid for <strong>15 minutes</strong>, so do this step right away. In the browser tab:</p>
   <ol>
-    <li>Paste the 8-character code.</li>
-    <li>Click <strong>Authorize</strong>.</li>
-    <li>Make sure you <strong>allow all permissions</strong> — do not skip or deny anything, or the deploy step later will fail.</li>
+    <li>Paste the 8-character code into the 8 boxes, click <strong>Continue</strong>.</li>
+    <li>Review the permissions shown, click the green <strong>Authorize</strong> button.</li>
+    <li>Make sure you <strong>allow all permissions</strong> requested — do not skip or deny anything, or the deploy step later will fail.</li>
+    <li>You should see a "Congratulations, you're all set!" page. Return to VS Code.</li>
   </ol>
-  <p>Once you return to VS Code, Copilot confirms everything is set up.</p>
+  <p>Copilot will finish the final check and print a message like <em>"Environment ready. Logged in as &lt;your-username&gt;."</em> You are set up.</p>
 
   <div class="callout warn">
     <span class="label">Allow all permissions</span>
@@ -695,26 +702,42 @@ then commit and push.</code></pre>
   </div>
 
   <h4 id="setup-trouble">Troubleshooting Prompt 1</h4>
-  <p>Prompt 1 installs <code>gh</code> through your operating system's package manager. If the package manager is missing, you can install <code>gh</code> manually.</p>
+  <p>Prompt 1 tries to install <code>gh</code> through your operating system's package manager first (Homebrew on macOS, winget on Windows). If the package manager is missing or fails, Copilot stops and points you to a manual installer.</p>
 
   <h5>Windows — winget not found</h5>
   <p>If you see an error saying <code>winget</code> is not recognized:</p>
   <ol>
-    <li>Go to <a href="https://cli.github.com" target="_blank">cli.github.com</a> and download the <code>.msi</code> installer.</li>
-    <li>Run the installer.</li>
-    <li>Restart VS Code. If the new command is still not recognized, restart Windows as well.</li>
-    <li>Re-run Prompt 1.</li>
+    <li>Go to <a href="https://github.com/cli/cli/releases/latest" target="_blank">github.com/cli/cli/releases/latest</a> and, under <strong>Assets</strong>, download the file ending in <code>_windows_amd64.msi</code>. (Or grab it from <a href="https://cli.github.com" target="_blank">cli.github.com</a>, which points to the same place.)</li>
+    <li>Double-click the <code>.msi</code> and follow the installer.</li>
+    <li>Restart VS Code. If the new <code>gh</code> command is still not recognized, restart Windows as well.</li>
+    <li>Re-paste Prompt 1 into Copilot Chat to continue.</li>
   </ol>
 
   <h5>macOS — brew not found</h5>
   <p>If you see an error saying <code>brew</code> is not found, you have two options.</p>
 
-  <p><strong>Option A (simplest, works for everyone).</strong> Go to <a href="https://cli.github.com" target="_blank">cli.github.com</a>, download the signed <code>.pkg</code> file, and install it directly. Restart VS Code, then re-run Prompt 1.</p>
+  <p><strong>Option A (simplest, works for everyone).</strong> Go to <a href="https://github.com/cli/cli/releases/latest" target="_blank">github.com/cli/cli/releases/latest</a> and, under <strong>Assets</strong>, download either <code>_macOS_arm64.pkg</code> (for Apple Silicon Macs, M1/M2/M3/M4) or <code>_macOS_amd64.pkg</code> (for Intel Macs). Double-click the file to install, restart VS Code, then re-paste Prompt 1.</p>
 
-  <p><strong>Option B (if you want Homebrew for other reasons).</strong> Go to <a href="https://brew.sh" target="_blank">brew.sh</a> and follow their installation steps. Their instructions are clear, and Homebrew is a useful tool beyond this lab. Once Homebrew is installed, re-run Prompt 1.</p>
+  <p><strong>Option B (if you want Homebrew for other reasons).</strong> Go to <a href="https://brew.sh" target="_blank">brew.sh</a> and follow their installation steps. Their instructions are clear, and Homebrew is a useful tool beyond this lab. Once Homebrew is installed, re-paste Prompt 1.</p>
+
+  <h5>macOS — <code>brew install gh</code> fails with "tap" errors</h5>
+  <p>Your Homebrew copy is stale. In the terminal, run <code>brew update</code>, then re-paste Prompt 1. If it still fails, fall back to Option A above.</p>
+
+  <h5>Linux</h5>
+  <p>Prompt 1 detects Linux but defers to the official per-distribution instructions at <a href="https://github.com/cli/cli/blob/trunk/docs/install_linux.md" target="_blank">github.com/cli/cli/blob/trunk/docs/install_linux.md</a>. Install <code>gh</code> by following the section for your distro, then re-paste Prompt 1 to continue with authentication.</p>
+
+  <h5><code>gh: command not found</code> right after the install succeeds</h5>
+  <p>The install updated your system's <code>PATH</code>, but the currently-open terminal is still using the old one. Close the VS Code terminal (the trash-can icon), open a new one (<kbd>View</kbd> → <kbd>Terminal</kbd>), and run <code>gh --version</code>. If the command is still not found, fully quit and reopen VS Code.</p>
 
   <h5>Device code expired</h5>
-  <p>If you do not finish the authorization within the time window, re-paste Prompt 1 to get a new code.</p>
+  <p>You have 15 minutes to finish the browser authorization. If you took longer, Copilot will report the expiry. Re-paste Prompt 1 and it will issue a new code.</p>
+
+  <h5>Verify the setup worked</h5>
+  <p>Open the VS Code terminal and run these three commands. All three should succeed:</p>
+  <pre><code>gh --version
+gh auth status
+gh api user --jq .login</code></pre>
+  <p>The last command should print your GitHub username on its own line. If it does, Prompt 1 is done and you can move on to Part 4 Deploy.</p>
 </section>
 
 <section class="chapter" id="deploy">
@@ -735,14 +758,19 @@ then commit and push.</code></pre>
   <p>Copy the whole text of Prompt 2, paste into Copilot Chat, and send. Copilot will:</p>
 
   <ol>
-    <li>Check that <code>gh</code> is installed and you are logged in.</li>
-    <li>Locate your webpage files and, if needed, copy them into a <code>/docs/</code> folder. Your other files (<code>.py</code>, notebooks, data) are not moved.</li>
-    <li>Create or update <code>.gitignore</code> with sensible defaults.</li>
-    <li>Create a new public GitHub repository and push your files.</li>
+    <li>Check that <code>gh</code> is installed and you are logged in (from Part 3).</li>
+    <li>Locate your webpage files. If your <code>index.html</code> lives at the root, Copilot creates a <code>docs/</code> folder and <em>copies</em> (not moves) the web files into it. Your other files (<code>.py</code>, notebooks, data folders) stay where they are.</li>
+    <li>Create or update <code>.gitignore</code> with sensible defaults for macOS, Python, Node, secrets, and large data. If you already have a <code>.gitignore</code>, Copilot <strong>appends</strong> the missing rules instead of overwriting your existing ones.</li>
+    <li>Create a new <strong>public</strong> GitHub repository named after your folder, commit, and push.</li>
     <li>Enable GitHub Pages from <code>main</code> branch, <code>/docs</code> folder.</li>
-    <li>Wait for the build (up to ~3 minutes) and print the live URL.</li>
-    <li>Write a new file called <code>GITHUB_PAGES.md</code> at your project root, summarizing everything it did.</li>
+    <li>Poll the build status (up to ~3 minutes) and print the live URL when it finishes.</li>
+    <li>Write a new file called <code>GITHUB_PAGES.md</code> at your project root, summarising what was changed, what was not changed, how to update the page later, and how to undo the deployment. Your own <code>README.md</code> is not touched.</li>
   </ol>
+
+  <div class="callout note">
+    <span class="label">What Copilot never changes</span>
+    <p>By design, Prompt 2 never moves or deletes your Python scripts, notebooks, data files, or your existing <code>README.md</code>. If you ever find one of those files missing or modified after Prompt 2, something went wrong — tell Copilot, and check the <code>GITHUB_PAGES.md</code> log.</p>
+  </div>
 
   <div class="link-grid">
     <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/prompts/prompt-2-deploy.txt" class="link-card" target="_blank">
@@ -937,12 +965,28 @@ git push</code></pre>
   <p>Prompt 2 writes a file called <code>GITHUB_PAGES.md</code> at the root of your project. It is a <strong>deployment log</strong>, not a README. It records:</p>
   <ul>
     <li>Where the page lives (repo URL, live URL, Pages source).</li>
-    <li>What Prompt 2 changed (every action it took).</li>
+    <li>What Prompt 2 changed in your workspace (every action it took).</li>
     <li>What Prompt 2 did not change (your original files, listed by name).</li>
-    <li>How to update the page later.</li>
-    <li>How to undo the deployment.</li>
+    <li>How to update the page later (the "commit and push" loop).</li>
+    <li>How to undo the deployment (disable Pages or delete the repo).</li>
+    <li>A "Questions" section inviting you to ask Copilot about any step.</li>
   </ul>
   <p>If anything about your deployment is unclear, open <code>GITHUB_PAGES.md</code> first — the answer is usually there. Your own <code>README.md</code> is untouched.</p>
+
+  <h4 id="after-undo">Undoing a deployment</h4>
+  <p>If you want the deployment to go away entirely — for example, you are experimenting and would rather start fresh — you have two options, from least to most destructive:</p>
+
+  <p><strong>1. Disable Pages only.</strong> This takes the webpage offline but keeps your code on GitHub. On github.com, open your repo → <kbd>Settings</kbd> → <kbd>Pages</kbd>, then under <strong>Source</strong>, pick <strong>None</strong> (or the equivalent on your version of GitHub) and save. The <code>&lt;your-username&gt;.github.io/&lt;repo&gt;/</code> URL will stop serving within a minute.</p>
+
+  <p><strong>2. Delete the repository.</strong> This removes both the code and the webpage. Ask Copilot:</p>
+  <pre><code>Please delete my GitHub repository &lt;repo-name&gt;. I want the remote
+repository gone, but keep my local copy.</code></pre>
+  <p>Copilot will run <code>gh repo delete</code> and confirm. Your local folder on your laptop is untouched. You can redeploy later from the same folder with Prompt 2.</p>
+
+  <div class="callout warn">
+    <span class="label">Deleting a repository is permanent</span>
+    <p>GitHub's <code>gh repo delete</code> cannot be undone. If there is any chance you want the online copy back, disable Pages (Option 1) rather than deleting. Also make sure your local folder is clean and committed first, so you can redeploy from a known state.</p>
+  </div>
 </section>
 
 <section class="chapter" id="stuck">
