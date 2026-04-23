@@ -749,9 +749,15 @@ gh api user --jq .login</code></pre>
   <h4 id="deploy-folder">Step 1. Open the right folder in VS Code</h4>
   <p>Before running Prompt 2, make sure VS Code has the folder you want to publish. Use <kbd>File</kbd> → <kbd>Open Folder</kbd> and pick the folder that contains your <code>index.html</code> (or your project's main HTML file).</p>
 
+  <p>Two quick ways to confirm you opened the right folder:</p>
+  <ul>
+    <li>Look at the <strong>Explorer sidebar</strong> on the left. The folder name at the top should match your project, and you should see your <code>index.html</code> (or <code>docs/index.html</code>) listed directly below it, not buried two or three levels down.</li>
+    <li>Open the VS Code terminal (<kbd>View</kbd> → <kbd>Terminal</kbd>) and run <code>pwd</code> (macOS/Linux) or <code>cd</code> (Windows). The path shown should end with your project's folder name.</li>
+  </ul>
+
   <div class="callout note">
     <span class="label">Common mistake</span>
-    <p>Opening the <em>parent</em> of your project folder, or the wrong project entirely. If Copilot says it can't find your files, this is almost always why.</p>
+    <p>Opening the <em>parent</em> of your project folder (for example, opening <code>~/Documents</code> instead of <code>~/Documents/my-project</code>), or opening the wrong project entirely. If Copilot says it can't find your files, this is almost always why.</p>
   </div>
 
   <h4 id="deploy-run">Step 2. Paste Prompt 2 and send</h4>
@@ -1186,12 +1192,12 @@ git push</code></pre>
     </a>
   </div>
 
-  <p>If you run into anything not covered in this guide, reply to the follow-up email with a screenshot of the error message, and I'll get back to you.</p>
+  <p>If you run into anything not covered in this guide, email me with a screenshot of the error and a brief description of what you were doing. I'll respond as soon as I can.</p>
 </section>
 
 <footer class="guide-footer">
   <p><strong>POLI 3148 · 2026 Spring · Week 13 Lab</strong></p>
-  <p>By Kaidierdan Muzhapaer, TA. Source on <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages" target="_blank">GitHub</a>.</p>
+  <p>By Kaidierdan Muzhapaer, TA. Source on <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages" target="_blank">GitHub</a>. Last updated April 2026.</p>
 </footer>
 
 </main>
