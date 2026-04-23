@@ -881,9 +881,22 @@ Wait for my confirmation before doing any moves.</code></pre>
 
   <p>Review Copilot's proposal. If it looks right, say "yes, go ahead." If a specific move is wrong, point it out and ask for a revision. Then run Prompt 2 again.</p>
 
+  <div class="callout note">
+    <span class="label">Manual fallback — reorganise by hand</span>
+    <p>If Copilot is unavailable, or you would rather do the moves yourself, you can reorganise manually. In VS Code's Explorer sidebar (or in Finder / File Explorer), do the following:</p>
+    <ol>
+      <li>Create a folder called <code>docs</code> at the project root (right-click in the Explorer → New Folder).</li>
+      <li>Drag your <code>index.html</code>, any <code>.css</code> and <code>.js</code> files, and any <code>assets/</code>, <code>images/</code>, <code>img/</code>, <code>css/</code>, <code>js/</code>, <code>fonts/</code>, <code>media/</code> folders that the page uses, into <code>docs/</code>.</li>
+      <li>Leave everything else (Python scripts, data, notebooks, READMEs) at the project root, untouched.</li>
+      <li>Double-click <code>docs/index.html</code> to open it in your browser. If the page renders correctly with images and styles, the structure is ready.</li>
+      <li>Run Prompt 2 again. It will now find <code>docs/index.html</code> and skip the Phase B copy step.</li>
+    </ol>
+    <p>Equivalent terminal commands (if you prefer): see <a href="#manual-path">Part 7 · M3</a> for the <code>mkdir / cp</code> version.</p>
+  </div>
+
   <div class="callout warn">
     <span class="label">Back up before any restructure</span>
-    <p>Before you let Copilot reorganise files, commit whatever you have (in the terminal: <code>git add . &amp;&amp; git commit -m "before restructure"</code>) or copy the whole folder to your Desktop as a safety net. If something goes wrong, you want a known-good state to return to.</p>
+    <p>Before you let Copilot reorganise files — or before you do it yourself — commit whatever you have (in the terminal: <code>git add . &amp;&amp; git commit -m "before restructure"</code>) or copy the whole folder to your Desktop as a safety net. If something goes wrong, you want a known-good state to return to.</p>
   </div>
 
   <div class="callout tip">
@@ -910,12 +923,18 @@ Wait for my confirmation before doing any moves.</code></pre>
   </ol>
 
   <div class="callout note">
-    <span class="label">Manual fallback</span>
+    <span class="label">Manual fallback — terminal</span>
     <p>If you prefer the terminal, or if Copilot is down, open the VS Code terminal in your project folder and run:</p>
     <pre><code>git add .
 git commit -m "your message here"
 git push</code></pre>
     <p>Same result, no AI needed.</p>
+  </div>
+
+  <div class="callout note">
+    <span class="label">Manual fallback — GitHub web editor</span>
+    <p>For a quick one-line fix (fixing a typo, updating a title), you can edit a file directly on github.com without touching your laptop. Open your repo, click the file you want to change, click the <strong>pencil icon</strong> (Edit this file), make your edit, scroll down, write a short commit message, and click <strong>Commit changes</strong>. The deployed page rebuilds automatically.</p>
+    <p>Keep in mind: this change lives only on GitHub until you run <code>git pull</code> locally, otherwise your laptop copy will drift out of sync.</p>
   </div>
 
   <h4 id="after-private">Making your repository private</h4>
@@ -967,6 +986,16 @@ git push</code></pre>
     <p>If you accidentally committed a file that should never have gone to GitHub (say, a large data file or a secret), you usually want to remove it from GitHub <em>without</em> deleting it locally. The correct command for that is <code>git rm --cached &lt;file&gt;</code>, followed by a commit and push. Ask Copilot: <em>"remove X from git tracking but keep the local file, then push."</em></p>
   </div>
 
+  <div class="callout note">
+    <span class="label">Manual fallback — delete without Copilot</span>
+    <p>Three common manual deletion paths, matched to what you actually want removed:</p>
+    <ol>
+      <li><strong>Remove from the online repository only, keep locally.</strong> On github.com, open the file in your repo, click the trash-can icon, commit the change. Then run <code>git pull</code> locally so your laptop copy reflects the deletion.</li>
+      <li><strong>Remove from git tracking, keep locally, never push again.</strong> In the terminal: <code>git rm --cached &lt;file&gt;</code>, then <code>git commit -m "stop tracking &lt;file&gt;" &amp;&amp; git push</code>. Add the file to <code>.gitignore</code> so it does not return.</li>
+      <li><strong>Remove from everywhere.</strong> In the terminal at your project root: <code>git rm &lt;file&gt;</code>, then <code>git commit -m "delete &lt;file&gt;" &amp;&amp; git push</code>. Gone locally, gone online. No undo.</li>
+    </ol>
+  </div>
+
   <h4 id="after-log">What is GITHUB_PAGES.md?</h4>
   <p>Prompt 2 writes a file called <code>GITHUB_PAGES.md</code> at the root of your project. It is a <strong>deployment log</strong>, not a README. It records:</p>
   <ul>
@@ -989,9 +1018,15 @@ git push</code></pre>
 repository gone, but keep my local copy.</code></pre>
   <p>Copilot will run <code>gh repo delete</code> and confirm. Your local folder on your laptop is untouched. You can redeploy later from the same folder with Prompt 2.</p>
 
+  <div class="callout note">
+    <span class="label">Manual fallbacks — delete repo without Copilot</span>
+    <p><strong>Via the GitHub website:</strong> open your repo on github.com, click <kbd>Settings</kbd>, scroll to the bottom to the red <strong>Danger Zone</strong>, click <strong>Delete this repository</strong>, type the full <code>owner/repo</code> name to confirm, and click the final red button. The webpage and the code are both removed within seconds.</p>
+    <p><strong>Via the terminal:</strong> run <code>gh repo delete &lt;your-username&gt;/&lt;repo-name&gt;</code>. You'll be asked to type the full name to confirm. This works only if you authorised the <code>delete_repo</code> scope during Prompt 1 (we did).</p>
+  </div>
+
   <div class="callout warn">
     <span class="label">Deleting a repository is permanent</span>
-    <p>GitHub's <code>gh repo delete</code> cannot be undone. If there is any chance you want the online copy back, disable Pages (Option 1) rather than deleting. Also make sure your local folder is clean and committed first, so you can redeploy from a known state.</p>
+    <p>GitHub's <code>gh repo delete</code> (and the website equivalent) cannot be undone. If there is any chance you want the online copy back, disable Pages (Option 1) rather than deleting. Also make sure your local folder is clean and committed first, so you can redeploy from a known state.</p>
   </div>
 </section>
 
