@@ -4,11 +4,14 @@ Slide deck and materials for the Week 13 lab session of POLI 3148 (2026 Spring, 
 
 **Online deck:** https://kedirdan.github.io/POLI3148_2026Spring_GitHubPages/
 
+**Student guide (full written walkthrough):** https://kedirdan.github.io/POLI3148_2026Spring_GitHubPages/guide/
+
 **Demo project** (used by the Clone prompt): [`POLI3148_2026Spring_GitHubPagesDemo`](https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPagesDemo) · [online page](https://kedirdan.github.io/POLI3148_2026Spring_GitHubPagesDemo/)
 
 ## Contents
 
 - `index.html` — the slide deck itself
+- `guide/` — full written student guide combining slides, script, and troubleshooting
 - `prompts/` — three copy-paste prompts students use during the lab
 - `learn-more/` — annotated editions of each prompt, explaining design choices
 - `assets/` — slide images

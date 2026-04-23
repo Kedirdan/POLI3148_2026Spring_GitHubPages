@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Guide · GitHub Pages · POLI 3148</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📖%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg:        #F5F5F7;
+  --paper:     #FFFFFF;
+  --ink:       #1D1D1F;
+  --mute:      #6E6E73;
+  --mute-soft: #A1A1A6;
+  --line:      rgba(29,29,31,0.12);
+  --line-soft: rgba(29,29,31,0.06);
+  --accent:    #B84426;
+  --accent-soft: rgba(184,68,38,0.08);
+  --tip-bg:    rgba(184,68,38,0.05);
+  --warn-bg:   rgba(218,164,32,0.10);
+  --warn-line: rgba(184,132,32,0.45);
+  --note-bg:   rgba(29,29,31,0.03);
+
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", "Inter", "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Inter", "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  max-width: 1180px;
+  margin: 0 auto;
+  gap: 56px;
+  padding: 48px 32px 120px;
+}
+
+/* SIDEBAR */
+.toc {
+  position: sticky;
+  top: 32px;
+  align-self: start;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  padding: 20px 0 20px 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.toc-brand {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 4px;
+}
+.toc-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.toc ol ol {
+  padding-left: 14px;
+  margin: 4px 0 8px;
+  font-size: 13px;
+}
+.toc li { margin: 4px 0; }
+.toc a {
+  color: var(--mute);
+  text-decoration: none;
+  display: block;
+  padding: 3px 10px 3px 10px;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.toc a:hover {
+  color: var(--ink);
+  border-left-color: var(--line);
+}
+.toc a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+.toc-divider {
+  height: 1px;
+  background: var(--line-soft);
+  margin: 18px 0;
+}
+.toc-links a {
+  border: none;
+  padding: 2px 10px;
+  color: var(--mute);
+  font-size: 13px;
+}
+.toc-links a:hover {
+  color: var(--accent);
+  border: none;
+}
+.toc-links a::before {
+  content: "↗ ";
+  color: var(--mute-soft);
+}
+
+/* MAIN */
+main {
+  min-width: 0;
+  max-width: 720px;
+}
+
+.guide-header {
+  margin-bottom: 64px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.guide-header h1 {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+.guide-header h1 em {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 300;
+}
+.guide-header .lede {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--mute);
+  font-weight: 300;
+  margin: 0 0 24px;
+  max-width: 600px;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+}
+.meta-row a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.meta-row a:hover {
+  border-bottom-color: var(--accent);
+}
+
+section.chapter {
+  margin-bottom: 72px;
+  scroll-margin-top: 24px;
+}
+section.chapter > h2 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+section.chapter > h3 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0 0 28px;
+  color: var(--ink);
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 40px 0 12px;
+  color: var(--ink);
+  scroll-margin-top: 24px;
+}
+
+h5 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 28px 0 8px;
+  color: var(--ink);
+}
+
+p {
+  margin: 0 0 16px;
+}
+
+strong { font-weight: 600; color: var(--ink); }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(184,68,38,0.3);
+  transition: border-color 0.15s;
+}
+a:hover {
+  border-bottom-color: var(--accent);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--note-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+pre {
+  background: var(--ink);
+  color: #F5F5F7;
+  padding: 20px 24px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+ul, ol {
+  padding-left: 24px;
+  margin: 0 0 20px;
+}
+li {
+  margin: 6px 0;
+}
+
+/* CALLOUTS */
+.callout {
+  margin: 28px 0;
+  padding: 18px 22px;
+  border-radius: 10px;
+  border-left: 3px solid;
+  background: var(--note-bg);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout .label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.callout.tip {
+  background: var(--tip-bg);
+  border-left-color: var(--accent);
+}
+.callout.tip .label { color: var(--accent); }
+.callout.warn {
+  background: var(--warn-bg);
+  border-left-color: var(--warn-line);
+}
+.callout.warn .label { color: #8B5A0E; }
+.callout.note {
+  background: var(--note-bg);
+  border-left-color: var(--mute-soft);
+}
+.callout.note .label { color: var(--mute); }
+
+/* CARDS */
+.card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.card {
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.card h6 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.card p { font-size: 15px; margin: 0; color: var(--mute); line-height: 1.55; }
+.card strong { color: var(--ink); }
+
+/* LINK CARDS */
+.link-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0;
+}
+.link-card {
+  display: block;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.link-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.link-card .lc-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 2px;
+}
+.link-card .lc-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+}
+.link-card .lc-sub {
+  font-size: 12px;
+  color: var(--mute);
+  display: block;
+}
+
+/* KEYWORD / EM in body */
+p em, li em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* FOOTER */
+.guide-footer {
+  margin-top: 96px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute);
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+.guide-footer a { color: var(--accent); }
+
+/* COMMAND / KBD */
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--ink);
+}
+
+/* INLINE SEQUENCE */
+.step-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 28px 20px 80px;
+  }
+  .toc {
+    position: static;
+    max-height: none;
+    margin-bottom: 32px;
+    padding: 20px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .guide-header h1 { font-size: 32px; }
+  .guide-header .lede { font-size: 17px; }
+  section.chapter > h3 { font-size: 26px; }
+  h4 { font-size: 19px; }
+  .card-row, .link-grid { grid-template-columns: 1fr; }
+  body { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR TOC -->
+<nav class="toc">
+  <span class="toc-brand">POLI 3148 · Week 13</span>
+  <div class="toc-title">Lab Guide: GitHub Pages</div>
+  <ol>
+    <li><a href="#intro">Welcome</a></li>
+    <li>
+      <a href="#concepts">1 · Concepts</a>
+      <ol>
+        <li><a href="#git">Git</a></li>
+        <li><a href="#github">GitHub</a></li>
+        <li><a href="#gitignore">.gitignore</a></li>
+        <li><a href="#pages">GitHub Pages</a></li>
+      </ol>
+    </li>
+    <li><a href="#workflow">2 · Workflow</a></li>
+    <li>
+      <a href="#setup">3 · Setup</a>
+      <ol>
+        <li><a href="#setup-configure">Configure Copilot</a></li>
+        <li><a href="#setup-install">Run Prompt 1</a></li>
+        <li><a href="#setup-authorize">Authorize</a></li>
+        <li><a href="#setup-trouble">Troubleshooting</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#deploy">4 · Deploy</a>
+      <ol>
+        <li><a href="#deploy-folder">Open the right folder</a></li>
+        <li><a href="#deploy-run">Run Prompt 2</a></li>
+        <li><a href="#deploy-clone">Using the demo</a></li>
+        <li><a href="#deploy-own">Your own project</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#after">5 · After deploy</a>
+      <ol>
+        <li><a href="#after-update">Update your page</a></li>
+        <li><a href="#after-private">Make it private</a></li>
+        <li><a href="#after-log">GITHUB_PAGES.md</a></li>
+      </ol>
+    </li>
+    <li><a href="#stuck">6 · When stuck</a></li>
+    <li><a href="#further">7 · Going further</a></li>
+  </ol>
+
+  <div class="toc-divider"></div>
+  <div class="toc-links">
+    <a href="../" target="_blank">Slide deck</a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPagesDemo" target="_blank">Demo repo</a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages" target="_blank">This guide's repo</a>
+    <a href="https://docs.github.com/en/pages" target="_blank">Official Pages docs</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<header class="guide-header">
+  <div class="eyebrow">POLI 3148 · Week 13 Lab</div>
+  <h1>Put your webpage<br>on the <em>web</em>.</h1>
+  <p class="lede">A complete student guide to publishing your project to the internet using GitHub Pages and an AI coding assistant.</p>
+  <div class="meta-row">
+    <span>Kaidierdan Muzhapaer · TA</span>
+    <span>Spring 2026</span>
+    <a href="../" target="_blank">Slide deck →</a>
+  </div>
+</header>
+
+<section class="chapter" id="intro">
+  <p>This guide combines everything from the lab session — the slides, the spoken explanations, the prompts, and the troubleshooting notes — into one readable document. You can read it top to bottom the first time, and come back later for the specific parts you need.</p>
+
+  <p>By the end, you should be able to take any webpage you have on your computer and publish it online with a public URL that anyone can open. You do not need to write a single Git command. Your AI assistant (GitHub Copilot) handles all of that for you.</p>
+
+  <div class="callout tip">
+    <span class="label">What you need</span>
+    <p>A laptop with <strong>VS Code</strong> installed, <strong>GitHub Copilot</strong> enabled (free for HKU students), and a GitHub account. That's it.</p>
+  </div>
+</section>
+
+<section class="chapter" id="concepts">
+  <h2>Part 1</h2>
+  <h3>Concepts you should understand</h3>
+  <p>Before we publish anything, let's get four terms straight: <strong>Git</strong>, <strong>GitHub</strong>, <strong>.gitignore</strong>, and <strong>GitHub Pages</strong>. If you already know them, skim this part and jump to Setup.</p>
+
+  <h4 id="git">Git</h4>
+  <p>Git is a <em>tool</em> that manages different versions of your files, especially code files. It runs on your computer, without internet.</p>
+
+  <p>Imagine you are writing a short description of HKU. You write version one. You add a word, change a verb, add a fact. You save each time. Without Git, you end up with files called <em>draft 1</em>, <em>draft 2</em>, <em>final</em>, and <em>final version 2</em>. You have probably done something like this before.</p>
+
+  <p>With Git, every save becomes a <strong>commit</strong> — a labeled snapshot of your project at that moment. Each commit has a name (technically a long hash like <code>a1b2c3</code>, but we simplify to <code>v1</code>, <code>v2</code>, <code>v3</code>, <code>v4</code> for teaching) and a <strong>message</strong>, a short note of what changed.</p>
+
+  <p>And here is the part that matters. <strong>All four versions are still there, on your computer, at the same time.</strong> You can always go back to any one of them.</p>
+
+  <h4 id="github">GitHub</h4>
+  <p>So what is GitHub?</p>
+
+  <p>Git runs on your <strong>computer</strong>. You can use it even if you never share anything, and it still remembers every version you saved. But when you want to put your code online, or work with other people, you need a cloud platform. <strong>GitHub</strong> is the biggest open-source community and code-hosting platform in the world. That's why we use it in this class.</p>
+
+  <p>Code moves between your computer and GitHub in two directions. You upload it with <code>git push</code>, and download it with <code>git pull</code>. Git does not sync automatically — it is entirely up to you, or up to your AI assistant, to decide when to sync.</p>
+
+  <div class="callout note">
+    <span class="label">Note</span>
+    <p>In this lab, you never type <code>git push</code> or <code>git pull</code> yourself. Your AI assistant does it for you. Understanding the concept is enough.</p>
+  </div>
+
+  <h4 id="gitignore">.gitignore</h4>
+  <p>When you push, does <em>every</em> file in your project folder need to go to GitHub? No. And you probably don't want it to.</p>
+
+  <p>There is a file called <code>.gitignore</code>. It lists the rules for which files should stay on your computer and not go online. A few common reasons why some files belong there:</p>
+
+  <ul>
+    <li><strong>Large data files.</strong> GitHub blocks files that are too big.</li>
+    <li><strong>Temporary files and system junk</strong>, like the ones your Mac or Python creates in the background. They should not be uploaded.</li>
+    <li><strong>API keys, passwords, anything private.</strong> These must never go online. <code>.gitignore</code> keeps them safe.</li>
+  </ul>
+
+  <div class="callout warn">
+    <span class="label">Important</span>
+    <p>Never commit secrets (API keys, passwords, <code>.env</code> files) to GitHub, even to a private repo. If you think you have, rotate the key immediately — once it's in Git history, removing it is complicated.</p>
+  </div>
+
+  <h4 id="pages">GitHub Pages</h4>
+  <p>GitHub stores your code, and it can also serve your code as a <strong>webpage</strong> — for free, with a public URL anyone can open. That's <strong>GitHub Pages</strong>.</p>
+
+  <p>For each repository, there are two URLs you should know:</p>
+  <ul>
+    <li><code>github.com/&lt;your-name&gt;/&lt;repo&gt;</code> — this is the <strong>code</strong>.</li>
+    <li><code>&lt;your-name&gt;.github.io/&lt;repo&gt;/</code> — this is the <strong>webpage</strong>.</li>
+  </ul>
+
+  <p>To make this work, we publish from a folder inside the repo called <code>/docs/</code>. That way your full project lives in the repo while only the web-ready files go online. Combined with your free Student Pro benefit, you can keep the code <strong>private</strong> while the webpage stays <strong>public</strong>.</p>
+</section>
+
+<section class="chapter" id="workflow">
+  <h2>Part 2</h2>
+  <h3>The edit loop: talking to your AI</h3>
+
+  <p>Managing your GitHub Pages site is simple: you change anything on it just by talking to your AI assistant. No server to configure, no commands to memorize. Any language works, as long as you are clear.</p>
+
+  <p>Here is what it looks like in practice. You open Copilot Chat and type one message:</p>
+
+  <pre><code>Change the subtitle of my webpage to 'Five Acts of European Democracy',
+then commit and push.</code></pre>
+
+  <p>Copilot finds where the subtitle is defined, edits the file, and uploads the change. You refresh your live page, and the subtitle has changed. You never type a Git command yourself.</p>
+
+  <div class="callout tip">
+    <span class="label">Mental model</span>
+    <p>Think of Copilot as the person who knows Git. You tell it <em>what</em> you want changed; it handles <em>how</em>. The only skill you need is describing what you want clearly.</p>
+  </div>
+</section>
+
+<section class="chapter" id="setup">
+  <h2>Part 3</h2>
+  <h3>Setup (one time per computer)</h3>
+
+  <p>You only do this part once, the first time you use GitHub Pages on a given laptop. It installs a tool called <code>gh</code> (GitHub CLI) and connects it to your GitHub account.</p>
+
+  <h4 id="setup-configure">Step 1. Configure Copilot Chat</h4>
+  <p>Open Copilot Chat inside VS Code. Then:</p>
+  <ol>
+    <li>Pick <code>GPT-5.3-Codex</code> as the model. If it is rate-limited, any of the three backups listed in the deck works.</li>
+    <li>Change <code>Default Approvals</code> to <strong>Autopilot (Preview)</strong> or <strong>Bypass Approvals</strong>, so Copilot can install things for you without stopping every few seconds.</li>
+  </ol>
+
+  <h4 id="setup-install">Step 2. Run Prompt 1</h4>
+  <p>Copy the whole text of Prompt 1, paste it into Copilot Chat, and send it. Copilot installs everything for you automatically.</p>
+
+  <div class="link-grid">
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/prompts/prompt-1-setup.txt" class="link-card" target="_blank">
+      <span class="lc-label">Prompt 1 · raw</span>
+      <span class="lc-title">Install gh and authenticate</span>
+      <span class="lc-sub">Copy-paste this into Copilot Chat</span>
+    </a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-1-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Prompt 1 · explained</span>
+      <span class="lc-title">Why each step exists</span>
+      <span class="lc-sub">Read this if you want to understand it deeply</span>
+    </a>
+  </div>
+
+  <h4 id="setup-authorize">Step 3. Authorize GitHub</h4>
+  <p>During the process, Copilot will give you an <strong>8-character code</strong> and open a browser tab. In that browser tab:</p>
+  <ol>
+    <li>Paste the 8-character code.</li>
+    <li>Click <strong>Authorize</strong>.</li>
+    <li>Make sure you <strong>allow all permissions</strong> — do not skip or deny anything, or the deploy step later will fail.</li>
+  </ol>
+  <p>Once you return to VS Code, Copilot confirms everything is set up.</p>
+
+  <div class="callout warn">
+    <span class="label">Allow all permissions</span>
+    <p>When the GitHub authorization page asks for permissions (repo access, workflow, etc.), grant them all. Partial permissions cause the deploy step to fail in confusing ways.</p>
+  </div>
+
+  <h4 id="setup-trouble">Troubleshooting Prompt 1</h4>
+  <p>Prompt 1 installs <code>gh</code> through your operating system's package manager. If the package manager is missing, you can install <code>gh</code> manually.</p>
+
+  <h5>Windows — winget not found</h5>
+  <p>If you see an error saying <code>winget</code> is not recognized:</p>
+  <ol>
+    <li>Go to <a href="https://cli.github.com" target="_blank">cli.github.com</a> and download the <code>.msi</code> installer.</li>
+    <li>Run the installer.</li>
+    <li>Restart VS Code. If the new command is still not recognized, restart Windows as well.</li>
+    <li>Re-run Prompt 1.</li>
+  </ol>
+
+  <h5>macOS — brew not found</h5>
+  <p>If you see an error saying <code>brew</code> is not found, you have two options.</p>
+
+  <p><strong>Option A (simplest, works for everyone).</strong> Go to <a href="https://cli.github.com" target="_blank">cli.github.com</a>, download the signed <code>.pkg</code> file, and install it directly. Restart VS Code, then re-run Prompt 1.</p>
+
+  <p><strong>Option B (if you want Homebrew for other reasons).</strong> Go to <a href="https://brew.sh" target="_blank">brew.sh</a> and follow their installation steps. Their instructions are clear, and Homebrew is a useful tool beyond this lab. Once Homebrew is installed, re-run Prompt 1.</p>
+
+  <h5>Device code expired</h5>
+  <p>If you do not finish the authorization within the time window, re-paste Prompt 1 to get a new code.</p>
+</section>
+
+<section class="chapter" id="deploy">
+  <h2>Part 4</h2>
+  <h3>Deploy your webpage</h3>
+
+  <p>With setup done, deploying is one paste of <strong>Prompt 2</strong>. Copilot takes the folder you currently have open in VS Code, uploads it to a new GitHub repository, enables GitHub Pages, waits for the build, and gives you your live URL.</p>
+
+  <h4 id="deploy-folder">Step 1. Open the right folder in VS Code</h4>
+  <p>Before running Prompt 2, make sure VS Code has the folder you want to publish. Use <kbd>File</kbd> → <kbd>Open Folder</kbd> and pick the folder that contains your <code>index.html</code> (or your project's main HTML file).</p>
+
+  <div class="callout note">
+    <span class="label">Common mistake</span>
+    <p>Opening the <em>parent</em> of your project folder, or the wrong project entirely. If Copilot says it can't find your files, this is almost always why.</p>
+  </div>
+
+  <h4 id="deploy-run">Step 2. Paste Prompt 2 and send</h4>
+  <p>Copy the whole text of Prompt 2, paste into Copilot Chat, and send. Copilot will:</p>
+
+  <ol>
+    <li>Check that <code>gh</code> is installed and you are logged in.</li>
+    <li>Locate your webpage files and, if needed, copy them into a <code>/docs/</code> folder. Your other files (<code>.py</code>, notebooks, data) are not moved.</li>
+    <li>Create or update <code>.gitignore</code> with sensible defaults.</li>
+    <li>Create a new public GitHub repository and push your files.</li>
+    <li>Enable GitHub Pages from <code>main</code> branch, <code>/docs</code> folder.</li>
+    <li>Wait for the build (up to ~3 minutes) and print the live URL.</li>
+    <li>Write a new file called <code>GITHUB_PAGES.md</code> at your project root, summarizing everything it did.</li>
+  </ol>
+
+  <div class="link-grid">
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/prompts/prompt-2-deploy.txt" class="link-card" target="_blank">
+      <span class="lc-label">Prompt 2 · raw</span>
+      <span class="lc-title">Deploy to GitHub Pages</span>
+      <span class="lc-sub">Copy-paste this into Copilot Chat</span>
+    </a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-2-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Prompt 2 · explained</span>
+      <span class="lc-title">Minimal disruption, scientific copy</span>
+      <span class="lc-sub">The design principles behind every step</span>
+    </a>
+  </div>
+
+  <h4 id="deploy-clone">If you don't have a project yet: use my demo</h4>
+  <p>If you arrive without your own project, or something goes wrong and you want to confirm your setup works, use the <strong>Clone prompt</strong>. It downloads my demo project (a simple political-science dashboard) to your Desktop and detaches it from my repo, so you can practice the full deploy flow on a project that is guaranteed to work.</p>
+
+  <div class="link-grid">
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/prompts/prompt-clone.txt" class="link-card" target="_blank">
+      <span class="lc-label">Clone prompt · raw</span>
+      <span class="lc-title">Get my demo project</span>
+      <span class="lc-sub">Downloads to Desktop, detaches from my repo</span>
+    </a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-clone-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Clone prompt · explained</span>
+      <span class="lc-title">Why it detaches origin</span>
+      <span class="lc-sub">Read this if you're curious</span>
+    </a>
+  </div>
+
+  <p>After cloning, open the new folder in VS Code and run Prompt 2 as usual. About a minute later, you'll have a live page mirroring my demo but hosted on your own account.</p>
+
+  <h4 id="deploy-own">If my demo works but your own project doesn't</h4>
+  <p>This is a common situation. Your setup is fine (the demo deployed), but your own project structure is not quite what Prompt 2 expects. The fix is to clean up your project first.</p>
+
+  <p>Ask Copilot something like:</p>
+
+  <pre><code>My project doesn't deploy cleanly with Prompt 2. Please clean up the
+folder structure so it works with GitHub Pages. Look at where my HTML,
+CSS, and assets live, and reorganize them sensibly.</code></pre>
+
+  <p>Copilot will look at your files and propose moves. Let it tidy things up, then run Prompt 2 again.</p>
+
+  <div class="callout tip">
+    <span class="label">Why this happens</span>
+    <p>Prompt 2 looks for <code>index.html</code> at the root or in <code>/docs/</code>, and copies standard web folders (<code>assets/</code>, <code>css/</code>, <code>js/</code>, <code>images/</code>, etc.) into <code>/docs/</code>. If your project uses unusual folder names, the automatic copy misses files.</p>
+  </div>
+</section>
+
+<section class="chapter" id="after">
+  <h2>Part 5</h2>
+  <h3>After your page is live</h3>
+
+  <h4 id="after-update">Updating your page</h4>
+  <p>Once your page is online, do <strong>not</strong> re-run Prompt 2 to update it. The edit loop is simpler:</p>
+  <ol>
+    <li>Edit any file in your project.</li>
+    <li>Ask Copilot in natural language, for example: <em>"Commit and push."</em> or <em>"Change the subtitle to 'My Project Title' then commit and push."</em></li>
+    <li>Wait about 30 seconds, refresh your live URL — the change is there.</li>
+  </ol>
+
+  <h4 id="after-private">Making your repository private</h4>
+  <p>By default, Prompt 2 creates your repository as <strong>public</strong>, which means <em>your code is visible to anyone on the internet</em>. For a lab submission or personal project, you probably want to keep the code private.</p>
+
+  <p>Just ask Copilot:</p>
+
+  <pre><code>Please make my repository private.</code></pre>
+
+  <p>Your webpage will keep working. This is because GitHub Pages visibility is independent of repository visibility — and your free GitHub <strong>Student Pro</strong> benefit includes private-repo Pages hosting.</p>
+
+  <div class="callout warn">
+    <span class="label">Before you submit</span>
+    <p>Unless you are explicitly okay with the world seeing your code (portfolios, public experiments), switch to private after deploying. Check your repository on github.com and confirm the private badge appears next to the name.</p>
+  </div>
+
+  <h4 id="after-log">What is GITHUB_PAGES.md?</h4>
+  <p>Prompt 2 writes a file called <code>GITHUB_PAGES.md</code> at the root of your project. It is a <strong>deployment log</strong>, not a README. It records:</p>
+  <ul>
+    <li>Where the page lives (repo URL, live URL, Pages source).</li>
+    <li>What Prompt 2 changed (every action it took).</li>
+    <li>What Prompt 2 did not change (your original files, listed by name).</li>
+    <li>How to update the page later.</li>
+    <li>How to undo the deployment.</li>
+  </ul>
+  <p>If anything about your deployment is unclear, open <code>GITHUB_PAGES.md</code> first — the answer is usually there. Your own <code>README.md</code> is untouched.</p>
+</section>
+
+<section class="chapter" id="stuck">
+  <h2>Part 6</h2>
+  <h3>If something goes wrong</h3>
+
+  <p>There is one universal answer that solves almost everything.</p>
+
+  <div class="callout tip">
+    <span class="label">Universal fix</span>
+    <p>Whatever you see on screen — an error, something stuck, a command that didn't work — <strong>copy it, paste it into Copilot, ask it to fix it</strong>. Copilot knows what it just did, so it knows what went wrong. This handles almost every case.</p>
+  </div>
+
+  <p>The exceptions, where you should raise your hand for the TA or reply to the follow-up email:</p>
+  <ul>
+    <li>A setting you cannot find in Copilot's own menu (for example, the <code>Default Approvals</code> dropdown does not appear).</li>
+    <li>You are not sure you opened the right folder in VS Code, and Copilot keeps failing to find your files.</li>
+    <li>Anything that blocks you for more than a few minutes even after pasting the error to Copilot.</li>
+  </ul>
+
+  <h4>Common issues at a glance</h4>
+
+  <div class="card-row">
+    <div class="card">
+      <h6>404 at your new URL</h6>
+      <p>The build takes a short while. Wait a minute, refresh the page. If still 404 after five minutes, check the repo's <strong>Settings → Pages</strong>: source should be <code>main</code> and <code>/docs</code>.</p>
+    </div>
+    <div class="card">
+      <h6>"Repository name already exists"</h6>
+      <p>Prompt 2 retries automatically with a date suffix like <code>-0423</code>. Nothing for you to do.</p>
+    </div>
+    <div class="card">
+      <h6>Files you didn't expect in /docs</h6>
+      <p>Your root has HTML files with non-standard names. Ask Copilot: <em>"Move X out of docs."</em></p>
+    </div>
+    <div class="card">
+      <h6>Expected files missing from /docs</h6>
+      <p>Your project uses a subfolder Prompt 2's whitelist doesn't know. Ask: <em>"Also copy the &lt;folder&gt; folder into docs."</em></p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="further">
+  <h2>Part 7</h2>
+  <h3>Going further</h3>
+
+  <p>Once you have published one project this way, the same flow works for anything else with an <code>index.html</code>. A few ideas:</p>
+
+  <ul>
+    <li><strong>Your own personal website.</strong> A single HTML file, with a biography, some links, and maybe a photo. Put it on GitHub Pages and you have a permanent web address.</li>
+    <li><strong>A class project portfolio.</strong> Put the visualizations and write-ups from each of your POLI courses into separate folders, each deployed the same way.</li>
+    <li><strong>A collaborative research site.</strong> Keep the repo private, share read access with co-authors, and publish the front page as a public GitHub Pages site.</li>
+  </ul>
+
+  <p>If you want to understand the prompts more deeply — why each step exists, what trade-offs were made, what happens on failure — the annotated editions are worth a read:</p>
+
+  <div class="link-grid">
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-1-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Annotated</span>
+      <span class="lc-title">Prompt 1, explained</span>
+      <span class="lc-sub">Install and authenticate</span>
+    </a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-2-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Annotated</span>
+      <span class="lc-title">Prompt 2, explained</span>
+      <span class="lc-sub">Deploy to GitHub Pages</span>
+    </a>
+    <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages/blob/main/learn-more/prompt-clone-explained.md" class="link-card" target="_blank">
+      <span class="lc-label">Annotated</span>
+      <span class="lc-title">Clone prompt, explained</span>
+      <span class="lc-sub">The backup path</span>
+    </a>
+    <a href="https://docs.github.com/en/pages" class="link-card" target="_blank">
+      <span class="lc-label">Official</span>
+      <span class="lc-title">GitHub Pages docs</span>
+      <span class="lc-sub">Reference for every setting</span>
+    </a>
+  </div>
+
+  <p>If you run into anything not covered in this guide, reply to the follow-up email with a screenshot of the error message, and I'll get back to you.</p>
+</section>
+
+<footer class="guide-footer">
+  <p><strong>POLI 3148 · 2026 Spring · Week 13 Lab</strong></p>
+  <p>By Kaidierdan Muzhapaer, TA. Source on <a href="https://github.com/Kedirdan/POLI3148_2026Spring_GitHubPages" target="_blank">GitHub</a>.</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+// Scroll-spy: highlight active TOC item as you scroll
+(function() {
+  const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+  const sections = Array.from(tocLinks)
+    .map(a => document.getElementById(a.getAttribute('href').slice(1)))
+    .filter(Boolean);
+
+  function updateActive() {
+    const scrollY = window.scrollY + 80;
+    let current = null;
+    for (const s of sections) {
+      if (s.offsetTop <= scrollY) current = s;
+    }
+    tocLinks.forEach(a => a.classList.remove('active'));
+    if (current) {
+      const active = document.querySelector('.toc a[href="#' + current.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { updateActive(); ticking = false; });
+      ticking = true;
+    }
+  });
+  updateActive();
+})();
+</script>
+
+</body>
+</html>
